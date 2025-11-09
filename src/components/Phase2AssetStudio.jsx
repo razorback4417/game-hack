@@ -28,6 +28,7 @@ function Phase2AssetStudio({ prompt, assets, onAssetsUpdate, onComplete, onBack,
   const [selectedAsset, setSelectedAsset] = useState(null)
   const [chatMessage, setChatMessage] = useState('')
   const [isRegenerating, setIsRegenerating] = useState(false)
+  const [isCleaning, setIsCleaning] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
   const [generator, setGenerator] = useState(null)
   const [saveStatus, setSaveStatus] = useState(null)
@@ -159,6 +160,63 @@ function Phase2AssetStudio({ prompt, assets, onAssetsUpdate, onComplete, onBack,
     }
   }
 
+  const handleCleanPink = async () => {
+    if (!selectedAsset || !generator || isCleaning) {
+      return
+    }
+
+    setIsCleaning(true)
+    try {
+      // Clean pink pixels from the asset
+      const cleanedBlob = await generator.cleanPinkPixels(selectedAsset.blob)
+
+      // Create new URL for the cleaned asset
+      const newUrl = URL.createObjectURL(cleanedBlob)
+
+      // Update the asset in the assets array
+      const updatedAssets = assets.map(asset => {
+        if (asset.id === selectedAsset.id) {
+          // Revoke old URL to free memory
+          if (asset.url && asset.url.startsWith('blob:')) {
+            URL.revokeObjectURL(asset.url)
+          }
+          return {
+            ...asset,
+            url: newUrl,
+            blob: cleanedBlob
+          }
+        }
+        return asset
+      })
+
+      onAssetsUpdate(updatedAssets)
+
+      // Update selected asset to show cleaned image
+      setSelectedAsset({
+        ...selectedAsset,
+        url: newUrl,
+        blob: cleanedBlob
+      })
+
+      // Automatically save to server
+      try {
+        await generator.saveAssetToServer(cleanedBlob, selectedAsset.name)
+        const displayName = getAssetDisplayName(selectedAsset.assetKey || selectedAsset.id)
+        setSaveStatus({ type: 'success', message: `Cleaned and saved ${displayName} to assets/images/` })
+        setTimeout(() => setSaveStatus(null), 3000)
+      } catch (saveError) {
+        console.error('Error saving cleaned asset:', saveError)
+        setSaveStatus({ type: 'error', message: `Failed to save: ${saveError.message}` })
+        setTimeout(() => setSaveStatus(null), 5000)
+      }
+    } catch (error) {
+      console.error('Error cleaning pink pixels:', error)
+      alert(`Failed to clean pink pixels: ${error.message}`)
+    } finally {
+      setIsCleaning(false)
+    }
+  }
+
   const closeModal = () => {
     setSelectedAsset(null)
     setChatMessage('')
@@ -248,13 +306,23 @@ function Phase2AssetStudio({ prompt, assets, onAssetsUpdate, onComplete, onBack,
                   placeholder="Type your changes here... (e.g., 'Make it a laser gun' or 'cyberpunk style')"
                   rows={4}
                 />
-                <button
-                  type="submit"
-                  className="phase2-modal-submit"
-                  disabled={!chatMessage.trim() || isRegenerating || !generator}
-                >
-                  {isRegenerating ? 'Regenerating...' : 'Regenerate Asset'}
-                </button>
+                <div className="phase2-modal-buttons">
+                  <button
+                    type="button"
+                    className="phase2-modal-clean-button"
+                    onClick={handleCleanPink}
+                    disabled={isCleaning || isRegenerating || !generator}
+                  >
+                    {isCleaning ? 'Cleaning...' : 'Clean Pink'}
+                  </button>
+                  <button
+                    type="submit"
+                    className="phase2-modal-submit"
+                    disabled={!chatMessage.trim() || isRegenerating || isCleaning || !generator}
+                  >
+                    {isRegenerating ? 'Regenerating...' : 'Regenerate Asset'}
+                  </button>
+                </div>
               </form>
             </div>
           </div>

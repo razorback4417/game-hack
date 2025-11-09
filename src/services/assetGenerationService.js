@@ -161,14 +161,23 @@ class AssetGenerationService {
           const height = canvas.height;
 
           // FIRST: Remove any pink that's already in the original image
+          // This is critical - remove pink before adding the background
           for (let i = 0; i < data.length; i += 4) {
             const r = data[i];
             const g = data[i + 1];
             const b = data[i + 2];
 
-            // Remove any pink that's already in the image
-            if ((r >= 150 && b >= 100 && g <= 100 && (r + b) > (g * 2.5)) ||
-                ((r + b) > 250 && g <= 100 && r >= 120 && b >= 80)) {
+            // Remove any pink that's already in the image - very aggressive
+            const redBlueSum = r + b;
+            const greenValue = g;
+
+            // Any pixel where red+blue significantly exceeds green
+            const isPinkInOriginal = (r >= 150 && b >= 100 && greenValue <= 100 && redBlueSum > (greenValue * 2.5)) ||
+                                    (redBlueSum > 250 && greenValue <= 100 && r >= 120 && b >= 80) ||
+                                    (r >= 120 && b >= 80 && greenValue <= 110 && redBlueSum > 200 && redBlueSum > (greenValue * 1.8)) ||
+                                    (redBlueSum > 180 && greenValue < redBlueSum * 0.6 && r >= 80 && b >= 60);
+
+            if (isPinkInOriginal) {
               data[i + 3] = 0; // Make transparent
             }
           }
@@ -297,9 +306,79 @@ class AssetGenerationService {
             // Also catch any pixel where red+blue significantly exceeds green
             const isPinkishTone = (r + b) > 250 && g <= 100 && r >= 120 && b >= 80;
 
-            if (isRemotelyPink || isPinkishTone) {
+            // Even more aggressive: any pixel where red+blue is much higher than green
+            const isVeryPinkish = (r + b) > 200 && g <= 120 && (r + b) > (g * 2) && r >= 100 && b >= 70;
+
+            // Catch magenta-like colors (high red, high blue, low green)
+            const isMagentaLike = r >= 120 && b >= 80 && g <= 110 && (r + b) > 200 && (r + b) > (g * 1.8);
+
+            if (isRemotelyPink || isPinkishTone || isVeryPinkish || isMagentaLike) {
               data[i + 3] = 0; // Make transparent
             }
+          }
+
+          // Fifth pass: ULTIMATE FINAL CHECK - remove ANY remaining pink traces
+          // This is the absolute last resort - remove anything that could possibly be pink
+          for (let i = 0; i < data.length; i += 4) {
+            const r = data[i];
+            const g = data[i + 1];
+            const b = data[i + 2];
+            const a = data[i + 3];
+
+            // Skip if already transparent
+            if (a === 0) continue;
+
+            // ULTIMATE CHECK: Remove ANY pixel where red+blue dominates over green
+            // This catches even the most subtle pink/magenta tones
+            const redBlueSum = r + b;
+            const greenValue = g;
+
+            // If red+blue is significantly higher than green, it's likely pink/magenta
+            const isPossiblyPink = redBlueSum > 180 &&
+                                   greenValue < redBlueSum * 0.6 &&
+                                   r >= 80 &&
+                                   b >= 60 &&
+                                   (redBlueSum > greenValue * 1.5);
+
+            // Also check for any pixel that has the pink/magenta signature
+            // Pink/magenta: high red, high blue, low green relative to red+blue
+            const hasPinkSignature = r >= 100 &&
+                                     b >= 70 &&
+                                     greenValue <= 120 &&
+                                     (redBlueSum > greenValue * 1.4) &&
+                                     (redBlueSum > 200);
+
+            if (isPossiblyPink || hasPinkSignature) {
+              data[i + 3] = 0; // Make transparent
+            }
+          }
+
+          // Final verification pass: Check for any remaining pink pixels
+          // This is a safety check to ensure we got everything
+          let pinkPixelsRemaining = 0;
+          for (let i = 0; i < data.length; i += 4) {
+            const r = data[i];
+            const g = data[i + 1];
+            const b = data[i + 2];
+            const a = data[i + 3];
+
+            // Skip if already transparent
+            if (a === 0) continue;
+
+            // Check if this pixel could still be pink
+            const redBlueSum = r + b;
+            const couldBePink = (r >= 100 && b >= 70 && g <= 120 && redBlueSum > (g * 1.4)) ||
+                               (redBlueSum > 180 && g < redBlueSum * 0.65 && r >= 80 && b >= 60);
+
+            if (couldBePink) {
+              // Remove it as a final safety measure
+              data[i + 3] = 0;
+              pinkPixelsRemaining++;
+            }
+          }
+
+          if (pinkPixelsRemaining > 0) {
+            console.warn(`Removed ${pinkPixelsRemaining} additional pink pixels in final verification pass`);
           }
 
           // Put processed data back to the temp canvas
@@ -724,6 +803,116 @@ class AssetGenerationService {
       g: Math.round(g * 255),
       b: Math.round(b * 255)
     };
+  }
+
+  /**
+   * Clean pink pixels from an existing asset blob (second pass)
+   * This is a manual cleaning function that users can trigger
+   * @param {Blob} blob - Image blob to clean
+   * @returns {Promise<Blob>} Cleaned image blob
+   */
+  async cleanPinkPixels(blob) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      const imgUrl = URL.createObjectURL(blob);
+
+      img.onload = () => {
+        try {
+          const canvas = document.createElement('canvas');
+          canvas.width = img.width;
+          canvas.height = img.height;
+          const ctx = canvas.getContext('2d');
+
+          // Draw image
+          ctx.drawImage(img, 0, 0);
+
+          // Get image data
+          const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          const data = imageData.data;
+          const width = canvas.width;
+          const height = canvas.height;
+
+          let pinkPixelsRemoved = 0;
+
+          // Multiple passes to ensure all pink is removed
+          // Pass 1: Remove obvious pink
+          for (let i = 0; i < data.length; i += 4) {
+            const r = data[i];
+            const g = data[i + 1];
+            const b = data[i + 2];
+            const a = data[i + 3];
+
+            if (a === 0) continue;
+
+            const redBlueSum = r + b;
+            const greenValue = g;
+
+            // Detect pink pixels
+            const isPink = (r >= 250 && g <= 5 && b >= 250) || // Pure pink
+                         (r >= 240 && g <= 20 && b >= 240) || // Near pink
+                         (r >= 200 && b >= 120 && g <= 80 && redBlueSum > 320) || // Pink-like
+                         (redBlueSum > 350 && g <= 80 && r >= 180 && b >= 100) || // Magenta-pink
+                         (r >= 180 && b >= 100 && g <= 90 && redBlueSum > 300 && redBlueSum > (g * 3)) || // Pinkish
+                         (r >= 150 && b >= 100 && g <= 100 && redBlueSum > (g * 2.5)) || // Remotely pink
+                         (redBlueSum > 250 && g <= 100 && r >= 120 && b >= 80) || // Pinkish tone
+                         (redBlueSum > 200 && g <= 120 && redBlueSum > (g * 2) && r >= 100 && b >= 70) || // Very pinkish
+                         (r >= 120 && b >= 80 && g <= 110 && redBlueSum > 200 && redBlueSum > (g * 1.8)) || // Magenta-like
+                         (redBlueSum > 180 && greenValue < redBlueSum * 0.6 && r >= 80 && b >= 60 && redBlueSum > (greenValue * 1.5)) || // Possibly pink
+                         (r >= 100 && b >= 70 && greenValue <= 120 && redBlueSum > (greenValue * 1.4) && redBlueSum > 200); // Pink signature
+
+            if (isPink) {
+              data[i + 3] = 0;
+              pinkPixelsRemoved++;
+            }
+          }
+
+          // Pass 2: Final sweep for any remaining pink
+          for (let i = 0; i < data.length; i += 4) {
+            const r = data[i];
+            const g = data[i + 1];
+            const b = data[i + 2];
+            const a = data[i + 3];
+
+            if (a === 0) continue;
+
+            const redBlueSum = r + b;
+            const couldBePink = (r >= 100 && b >= 70 && g <= 120 && redBlueSum > (g * 1.4)) ||
+                               (redBlueSum > 180 && g < redBlueSum * 0.65 && r >= 80 && b >= 60);
+
+            if (couldBePink) {
+              data[i + 3] = 0;
+              pinkPixelsRemoved++;
+            }
+          }
+
+          // Put processed data back
+          ctx.putImageData(imageData, 0, 0);
+
+          // Convert to blob
+          canvas.toBlob((processedBlob) => {
+            URL.revokeObjectURL(imgUrl);
+            if (processedBlob) {
+              if (pinkPixelsRemoved > 0) {
+                console.log(`Cleaned ${pinkPixelsRemoved} pink pixels from image`);
+              }
+              resolve(processedBlob);
+            } else {
+              reject(new Error('Failed to process image'));
+            }
+          }, 'image/png');
+        } catch (error) {
+          URL.revokeObjectURL(imgUrl);
+          reject(error);
+        }
+      };
+
+      img.onerror = () => {
+        URL.revokeObjectURL(imgUrl);
+        reject(new Error('Failed to load image'));
+      };
+
+      img.src = imgUrl;
+    });
   }
 
   /**

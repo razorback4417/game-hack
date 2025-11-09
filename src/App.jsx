@@ -4,6 +4,7 @@ import Phase2AssetStudio from './components/Phase2AssetStudio'
 import Phase3LogicStudio from './components/Phase3LogicStudio'
 import Phase4GamePreview from './components/Phase4GamePreview'
 import LoadingBar from './components/LoadingBar'
+import BackgroundMusic from './components/BackgroundMusic'
 import AssetGenerationService from './services/assetGenerationService'
 import { getAllAssetKeys, ASSET_CONFIG } from './config/assetConfig'
 import './App.css'
@@ -188,41 +189,154 @@ function App() {
 
     // Generate initial PRD based on prompt and assets
     const initialPRD = {
-      game: {
-        title: gamePrompt || 'Action RPG',
-        worldSize: 1920,
-        camera: { followPlayer: true }
+      description: gamePrompt || 'An action RPG where you play as a hero fighting monsters in a pixel art world.',
+      gameplay: {
+        overview: 'A top-down action RPG where the player explores a large world, fights enemies, collects items, and battles powerful bosses.',
+        controls: {
+          movement: 'WASD keys to move in 8 directions',
+          melee: 'Hold left mouse button to attack with a sword',
+          spell: 'Press spacebar to cast a magical spell'
+        },
+        world: {
+          size: 'Large open world (1920x1920 pixels)',
+          camera: 'Camera follows the player',
+          environment: 'Pixel art tileset with trees, obstacles, and decorative elements'
+        }
       },
       player: {
         name: 'Hero',
-        level: 1,
-        health: 100,
-        vitality: 100,
-        strength: 25,
-        speed: 125,
-        invincibilityFrames: 500
+        description: 'A customizable hero character that starts at level 1',
+        stats: {
+          health: 100,
+          vitality: 100,
+          strength: 25,
+          speed: 125
+        },
+        abilities: {
+          melee: 'Sword attack that rotates toward the mouse cursor',
+          spell: 'Magical projectile spell with 6-frame animation'
+        },
+        progression: {
+          startingLevel: 1,
+          xpToNext: 20,
+          levelUpBonus: 'Gains +5 health, +5 vitality, +1 strength, and +1 speed per level'
+        }
       },
       enemies: {
-        types: ['Skeleton', 'Slime', 'Bat', 'Ghost', 'Spider'],
-        spawnCount: 100,
-        scaling: { health: 2, speed: 1.5, strength: 1.5, reward: 1.5 }
+        description: 'Five different enemy types spawn throughout the world',
+        types: [
+          {
+            name: 'Skeleton',
+            description: 'Common enemy with balanced stats. Appears 30% of the time.',
+            stats: '100 health, 70 speed, 20 strength, rewards 5 XP'
+          },
+          {
+            name: 'Slime',
+            description: 'Slow but tanky enemy with high health. Appears 10% of the time.',
+            stats: '300 health, 40 speed, 50 strength, rewards 10 XP'
+          },
+          {
+            name: 'Bat',
+            description: 'Fast but fragile flying enemy. Appears 20% of the time.',
+            stats: '20 health, 200 speed, 10 strength, rewards 2 XP'
+          },
+          {
+            name: 'Ghost',
+            description: 'Moderate enemy with good stats. Appears 10% of the time.',
+            stats: '200 health, 60 speed, 30 strength, rewards 7 XP'
+          },
+          {
+            name: 'Spider',
+            description: 'Quick enemy with moderate health. Appears 30% of the time.',
+            stats: '50 health, 120 speed, 12 strength, rewards 4 XP'
+          }
+        ],
+        spawning: {
+          totalCount: 100,
+          scaling: 'Enemies get stronger as player levels up, gaining +2 health, +1.5 speed, +1.5 strength, and +1.5 XP reward per level'
+        }
       },
       bosses: {
         type: 'Dragon',
-        health: 2000,
-        speed: 100,
-        strength: 50,
-        reward: 500,
-        spawnThreshold: 5000
+        description: 'Powerful boss enemy that spawns when the player collects enough gold',
+        stats: {
+          health: 2000,
+          speed: 100,
+          strength: 50,
+          reward: 500
+        },
+        spawning: {
+          threshold: 'Spawns when player collects 5000 gold',
+          respawn: 'Each subsequent dragon requires 5000 more gold than the previous one',
+          variants: '8 different color variants that cycle through'
+        },
+        attacks: {
+          fireball: 'Shoots animated fireball projectiles at the player'
+        },
+        death: {
+          effect: 'Explodes with 100 flame particles when defeated',
+          drops: 'Always drops gold, chests, and stat potions'
+        }
       },
       collectables: {
-        gold: { dropChance: 0.2, multiplier: 2 },
-        potions: { dropChance: 0.33, types: ['health', 'vitality', 'strength', 'speed'] }
+        gold: {
+          description: 'Currency dropped by defeated enemies',
+          dropRate: '20% chance to drop from any enemy',
+          value: 'Base value multiplied by 2'
+        },
+        potions: {
+          description: 'Consumable items that permanently boost player stats',
+          dropRate: '33% chance to drop from defeated enemies',
+          types: [
+            {
+              name: 'Health Potion',
+              description: 'Restores 20-30 health points',
+              dropChance: '70% of potion drops'
+            },
+            {
+              name: 'Vitality Potion',
+              description: 'Permanently increases maximum vitality by 4-14 points',
+              dropChance: '10% of potion drops'
+            },
+            {
+              name: 'Strength Potion',
+              description: 'Permanently increases attack strength by 4-14 points',
+              dropChance: '10% of potion drops'
+            },
+            {
+              name: 'Speed Potion',
+              description: 'Permanently increases movement speed by 4-14 points',
+              dropChance: '10% of potion drops'
+            }
+          ]
+        },
+        chests: {
+          description: 'Treasure chests dropped by defeated dragons',
+          contents: 'Contains valuable rewards'
+        }
       },
       progression: {
-        xpToNext: 20,
-        xpMultiplier: 1.1,
-        levelUpStats: { vitality: 5, health: 5, strength: 1, speed: 1 }
+        leveling: {
+          xpSystem: 'Gain XP by defeating enemies',
+          xpToNext: 'Starts at 20 XP, increases by 10% each level',
+          levelUpEffects: 'Celebratory particle effects when leveling up'
+        },
+        difficulty: {
+          enemyScaling: 'Enemies become stronger as player levels up',
+          bossSpawning: 'Bosses spawn more frequently as player collects more gold'
+        }
+      },
+      audio: {
+        music: {
+          menu: 'Opening theme plays in the main menu',
+          gameplay: 'Overworld music loops during gameplay'
+        },
+        soundEffects: {
+          combat: 'Attack sounds for player and all enemy types',
+          collection: 'Sounds for collecting gold and potions',
+          progression: 'Level up sound effect',
+          boss: 'Dragon spawn and combat sounds'
+        }
       }
     }
     setGamePRD(initialPRD)
@@ -252,6 +366,7 @@ function App() {
 
   return (
     <div className="app">
+      <BackgroundMusic isGamePreview={currentPhase === 4} />
       {isLoading && (
         <LoadingBar message={loadingMessage} progress={loadingProgress} />
       )}

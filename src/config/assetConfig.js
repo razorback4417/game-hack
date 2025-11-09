@@ -145,6 +145,17 @@ export const ASSET_CONFIG = {
     themePrompt: (theme) => `A tiny ${theme}-themed magical particle sprite, 2x2 pixels, bright and colorful, pixel art style. The particle should match the ${theme} theme.`,
     style: 'pixel art, 16-bit style, game sprite, sharp edges, no anti-aliasing',
     scale: 1
+  },
+  play: {
+    file: 'play.png',
+    dimensions: { width: 102, height: 24 },
+    frameSize: { width: 102, height: 24 },
+    type: 'ui',
+    usage: 'Main menu play button',
+    basePrompt: 'A pixel art play button, 102x24 pixels, with the word "PLAY" clearly visible, game UI style, button-like appearance with border or background',
+    themePrompt: (theme) => `A ${theme}-themed pixel art play button, 102x24 pixels, with the word "PLAY" clearly visible, game UI style, button-like appearance with border or background. The button should match the ${theme} theme.`,
+    style: 'pixel art, 16-bit style, game UI, sharp edges, no anti-aliasing',
+    scale: 1
   }
 };
 
