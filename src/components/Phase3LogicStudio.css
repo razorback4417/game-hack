@@ -1,0 +1,332 @@
+.phase3-container {
+  min-height: 100vh;
+  padding: 40px 20px;
+}
+
+.phase3-header {
+  max-width: 1400px;
+  margin: 0 auto 40px;
+  background: rgba(20, 20, 35, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(20px) saturate(180%);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 30px 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.phase3-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 215, 0, 0.05) 0%,
+    rgba(255, 237, 78, 0.03) 50%,
+    rgba(255, 215, 0, 0.05) 100%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+.phase3-header > * {
+  position: relative;
+  z-index: 1;
+}
+
+.phase3-back-button {
+  background: rgba(0, 0, 0, 0.6);
+  border: 3px solid #ffd700;
+  color: #ffd700;
+  padding: 10px 20px;
+  border-radius: 0;
+  cursor: pointer;
+  font-size: 0.7rem;
+  font-weight: normal;
+  transition: all 0.1s ease;
+  margin-bottom: 20px;
+  text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.8);
+  font-family: 'Press Start 2P', monospace;
+  image-rendering: pixelated;
+  box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.8);
+}
+
+.phase3-back-button:hover {
+  background: rgba(0, 0, 0, 0.8);
+  border-color: #ffed4e;
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.8);
+}
+
+.phase3-title {
+  font-size: 2rem;
+  margin: 0;
+  font-weight: normal;
+  color: #ffd700;
+  text-shadow:
+    3px 3px 0px #000,
+    0 0 20px rgba(255, 215, 0, 0.8);
+  letter-spacing: 0.1em;
+  font-family: 'Press Start 2P', monospace;
+  image-rendering: pixelated;
+  line-height: 1.6;
+}
+
+.phase3-content {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.phase3-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  margin-bottom: 40px;
+}
+
+@media (max-width: 1024px) {
+  .phase3-split {
+    grid-template-columns: 1fr;
+  }
+}
+
+.phase3-chat-panel,
+.phase3-prd-panel {
+  background: rgba(20, 20, 35, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  padding: 30px;
+  backdrop-filter: blur(20px) saturate(180%);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  height: 650px;
+  position: relative;
+  overflow: hidden;
+}
+
+.phase3-chat-panel::before,
+.phase3-prd-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 215, 0, 0.05) 0%,
+    rgba(255, 237, 78, 0.03) 50%,
+    rgba(255, 215, 0, 0.05) 100%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+.phase3-chat-panel > *,
+.phase3-prd-panel > * {
+  position: relative;
+  z-index: 1;
+}
+
+.phase3-panel-title {
+  font-size: 1rem;
+  margin: 0 0 24px 0;
+  color: #ffd700;
+  font-weight: normal;
+  text-shadow:
+    2px 2px 0px #000,
+    0 0 15px rgba(255, 215, 0, 0.8);
+  font-family: 'Press Start 2P', monospace;
+  image-rendering: pixelated;
+  letter-spacing: 0.1em;
+}
+
+.phase3-chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 20px;
+  padding-right: 12px;
+}
+
+.phase3-chat-message {
+  padding: 16px;
+  border-radius: 0;
+  margin-bottom: 16px;
+  background: rgba(0, 0, 0, 0.6);
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.8);
+  line-height: 1.8;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.7rem;
+  image-rendering: pixelated;
+  box-shadow: inset 4px 4px 0px rgba(0, 0, 0, 0.5);
+}
+
+.phase3-chat-message.system {
+  background: rgba(0, 0, 0, 0.8);
+  border: 3px solid #ffd700;
+  color: #ffd700;
+  text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.8);
+}
+
+.phase3-chat-message.system ul {
+  margin: 12px 0 0 24px;
+  padding: 0;
+}
+
+.phase3-chat-message.system li {
+  margin: 6px 0;
+}
+
+.phase3-chat-input {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.phase3-chat-textarea {
+  width: 100%;
+  padding: 16px;
+  border: 3px solid #ffd700;
+  border-radius: 0;
+  background: rgba(0, 0, 0, 0.8);
+  color: #ffd700;
+  font-size: 0.8rem;
+  font-family: 'Press Start 2P', monospace;
+  resize: vertical;
+  transition: all 0.2s ease;
+  box-shadow:
+    inset 4px 4px 0px rgba(0, 0, 0, 0.5),
+    4px 4px 0px rgba(0, 0, 0, 0.8);
+  line-height: 1.8;
+  image-rendering: pixelated;
+  text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.8);
+}
+
+.phase3-chat-textarea:focus {
+  outline: none;
+  border-color: #ffed4e;
+  background: rgba(0, 0, 0, 0.9);
+  box-shadow:
+    inset 4px 4px 0px rgba(0, 0, 0, 0.5),
+    4px 4px 0px rgba(0, 0, 0, 0.8),
+    0 0 15px rgba(255, 215, 0, 0.5);
+}
+
+.phase3-chat-textarea::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.phase3-chat-submit {
+  padding: 12px 24px;
+  font-size: 0.8rem;
+  font-weight: normal;
+  background: #ffd700;
+  color: #000;
+  border: 3px solid #000;
+  border-radius: 0;
+  cursor: pointer;
+  transition: all 0.1s ease;
+  box-shadow:
+    5px 5px 0px rgba(0, 0, 0, 0.8),
+    inset -2px -2px 0px rgba(0, 0, 0, 0.2);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  align-self: flex-start;
+  font-family: 'Press Start 2P', monospace;
+  image-rendering: pixelated;
+  text-shadow: none;
+}
+
+.phase3-chat-submit:hover:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow:
+    3px 3px 0px rgba(0, 0, 0, 0.8),
+    inset -2px -2px 0px rgba(0, 0, 0, 0.2);
+  background: #ffed4e;
+}
+
+.phase3-chat-submit:active:not(:disabled) {
+  transform: translate(4px, 4px);
+  box-shadow:
+    1px 1px 0px rgba(0, 0, 0, 0.8),
+    inset -2px -2px 0px rgba(0, 0, 0, 0.2);
+}
+
+.phase3-chat-submit:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.phase3-prd-viewer {
+  flex: 1;
+  overflow-y: auto;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.phase3-prd-json {
+  margin: 0;
+  color: #ffd700;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.6rem;
+  line-height: 2;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.8);
+  image-rendering: pixelated;
+}
+
+.phase3-actions {
+  display: flex;
+  justify-content: center;
+  padding: 30px 0;
+}
+
+.phase3-generate-button {
+  padding: 18px 40px;
+  font-size: 1rem;
+  font-weight: normal;
+  background: #ffd700;
+  color: #000;
+  border: 4px solid #000;
+  border-radius: 0;
+  cursor: pointer;
+  transition: all 0.1s ease;
+  box-shadow:
+    6px 6px 0px rgba(0, 0, 0, 0.8),
+    inset -2px -2px 0px rgba(0, 0, 0, 0.2);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-family: 'Press Start 2P', monospace;
+  image-rendering: pixelated;
+  text-shadow: none;
+}
+
+.phase3-generate-button:hover {
+  transform: translate(2px, 2px);
+  box-shadow:
+    4px 4px 0px rgba(0, 0, 0, 0.8),
+    inset -2px -2px 0px rgba(0, 0, 0, 0.2);
+  background: #ffed4e;
+}
+
+.phase3-generate-button:active {
+  transform: translate(4px, 4px);
+  box-shadow:
+    2px 2px 0px rgba(0, 0, 0, 0.8),
+    inset -2px -2px 0px rgba(0, 0, 0, 0.2);
+}

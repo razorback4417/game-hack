@@ -1,0 +1,287 @@
+{
+  "images": {
+    "characters": {
+      "file": "characters.png",
+      "dimensions": { "width": 192, "height": 128 },
+      "frameSize": { "width": 16, "height": 16 },
+      "type": "spritesheet",
+      "totalFrames": 96,
+      "usage": "Player and enemy characters",
+      "animations": {
+        "player": {
+          "down": [3, 4, 5],
+          "left": [15, 16, 17],
+          "right": [27, 28, 29],
+          "up": [39, 40, 41]
+        },
+        "skeleton": {
+          "down": [9, 10, 11],
+          "left": [21, 22, 23],
+          "right": [33, 34, 35],
+          "up": [45, 46, 47]
+        },
+        "slime": {
+          "down": [48, 49, 50],
+          "left": [60, 61, 62],
+          "right": [72, 73, 74],
+          "up": [84, 85, 86]
+        },
+        "bat": {
+          "down": [51, 52, 53],
+          "left": [63, 64, 65],
+          "right": [75, 76, 77],
+          "up": [87, 88, 89]
+        },
+        "ghost": {
+          "down": [54, 55, 56],
+          "left": [66, 67, 68],
+          "right": [78, 79, 80],
+          "up": [90, 91, 92]
+        },
+        "spider": {
+          "down": [57, 58, 59],
+          "left": [69, 70, 71],
+          "right": [81, 82, 83],
+          "up": [93, 94, 95]
+        }
+      },
+      "scale": 2
+    },
+    "dragons": {
+      "file": "dragons.png",
+      "dimensions": { "width": 384, "height": 256 },
+      "frameSize": { "width": 32, "height": 32 },
+      "type": "spritesheet",
+      "totalFrames": 96,
+      "usage": "Boss enemy (Dragon) with 8 color variants",
+      "colorVariants": 8,
+      "scale": 2
+    },
+    "tiles": {
+      "file": "tiles.png",
+      "dimensions": { "width": 128, "height": 240 },
+      "frameSize": { "width": 16, "height": 16 },
+      "type": "spritesheet",
+      "totalFrames": 120,
+      "usage": "Background tiles and environment obstacles",
+      "notableFrames": {
+        "background": 65,
+        "menuBackground": 92,
+        "tree": 38,
+        "shrub": 20,
+        "pine": 30,
+        "column": 39,
+        "gold": 68
+      },
+      "scale": 2
+    },
+    "things": {
+      "file": "things.png",
+      "dimensions": { "width": 192, "height": 128 },
+      "frameSize": { "width": 16, "height": 16 },
+      "type": "spritesheet",
+      "totalFrames": 96,
+      "usage": "Collectable items (chests)",
+      "animations": {
+        "chest": {
+          "idle": [6],
+          "open": [18, 30, 42]
+        }
+      },
+      "scale": 2
+    },
+    "potions": {
+      "file": "potions.png",
+      "dimensions": { "width": 176, "height": 16 },
+      "frameSize": { "width": 16, "height": 16 },
+      "type": "spritesheet",
+      "totalFrames": 11,
+      "usage": "Potion collectables",
+      "frames": {
+        "health": 0,
+        "vitality": 2,
+        "strength": 3,
+        "speed": 4
+      },
+      "scale": 2
+    },
+    "dead": {
+      "file": "dead.png",
+      "dimensions": { "width": 48, "height": 64 },
+      "frameSize": { "width": 16, "height": 16 },
+      "type": "spritesheet",
+      "totalFrames": 12,
+      "usage": "Corpse sprites when entities die",
+      "frames": {
+        "dragon": 0,
+        "player": 1,
+        "skeleton": 6,
+        "slime": 7,
+        "bat": 8,
+        "ghost": 9,
+        "spider": 10
+      },
+      "scale": 2,
+      "lifespan": 3000
+    },
+    "fireball": {
+      "file": "fireball.png",
+      "dimensions": { "width": 64, "height": 16 },
+      "frameSize": { "width": 16, "height": 16 },
+      "type": "spritesheet",
+      "totalFrames": 4,
+      "usage": "Boss attack projectile",
+      "animation": [0, 1, 2, 3],
+      "scale": 1.5
+    },
+    "spell": {
+      "file": "spell.png",
+      "dimensions": { "width": 72, "height": 12 },
+      "frameSize": { "width": 12, "height": 12 },
+      "type": "spritesheet",
+      "totalFrames": 6,
+      "usage": "Player spell attack projectile",
+      "animation": [0, 1, 2, 3, 4, 5],
+      "scale": 1.5
+    },
+    "sword": {
+      "file": "sword.png",
+      "dimensions": { "width": 32, "height": 32 },
+      "type": "image",
+      "usage": "Player melee attack projectile",
+      "scale": 1.5,
+      "rotates": true
+    },
+    "flame": {
+      "file": "flame.png",
+      "dimensions": { "width": 32, "height": 32 },
+      "type": "particle",
+      "usage": "Particle effect for dragon death explosion",
+      "particleCount": 100
+    },
+    "level-particle": {
+      "file": "level-particle.png",
+      "dimensions": { "width": 2, "height": 2 },
+      "type": "particle",
+      "usage": "Particle effect for level-up celebration",
+      "particleCount": 100
+    },
+    "spell-particle": {
+      "file": "spell-particle.png",
+      "dimensions": { "width": 2, "height": 2 },
+      "type": "particle",
+      "usage": "Particle effect for spell impact",
+      "particleCount": 100
+    },
+    "play": {
+      "file": "play.png",
+      "dimensions": { "width": 102, "height": 24 },
+      "type": "ui",
+      "usage": "Main menu play button",
+      "scale": 1
+    },
+    "preload-bar": {
+      "file": "preload-bar.png",
+      "dimensions": { "width": 256, "height": 8 },
+      "type": "ui",
+      "usage": "Loading progress bar",
+      "scale": 1
+    },
+    "logo": {
+      "file": "logo.png",
+      "dimensions": { "width": 464, "height": 63 },
+      "type": "ui",
+      "usage": "Game logo (not used in template)",
+      "status": "deprecated"
+    }
+  },
+  "audio": {
+    "music": {
+      "opening": {
+        "file": "opening.ogg",
+        "format": "ogg",
+        "usage": "Main menu background music",
+        "loop": true
+      },
+      "overworld": {
+        "file": "overworld.ogg",
+        "format": "ogg",
+        "usage": "In-game background music",
+        "loop": true
+      }
+    },
+    "sounds": {
+      "attack": {
+        "file": "attack.wav",
+        "format": "wav",
+        "usage": "Player melee attack sound"
+      },
+      "player": {
+        "file": "player.wav",
+        "format": "wav",
+        "usage": "Player taking damage sound"
+      },
+      "skeleton": {
+        "file": "skeleton.wav",
+        "format": "wav",
+        "usage": "Skeleton enemy taking damage sound"
+      },
+      "slime": {
+        "file": "slime.wav",
+        "format": "wav",
+        "usage": "Slime enemy taking damage sound"
+      },
+      "bat": {
+        "file": "bat.wav",
+        "format": "wav",
+        "usage": "Bat enemy taking damage sound"
+      },
+      "ghost": {
+        "file": "ghost.wav",
+        "format": "wav",
+        "usage": "Ghost enemy taking damage sound"
+      },
+      "spider": {
+        "file": "spider.wav",
+        "format": "wav",
+        "usage": "Spider enemy taking damage sound"
+      },
+      "dragon": {
+        "file": "dragon.wav",
+        "format": "wav",
+        "usage": "Dragon boss spawn and damage sound"
+      },
+      "gold": {
+        "file": "gold.wav",
+        "format": "wav",
+        "usage": "Collecting gold sound"
+      },
+      "potion": {
+        "file": "potion.ogg",
+        "format": "ogg",
+        "usage": "Collecting potion sound"
+      },
+      "level": {
+        "file": "level.ogg",
+        "format": "ogg",
+        "usage": "Level up sound"
+      },
+      "fireball": {
+        "file": "fireball.wav",
+        "format": "wav",
+        "usage": "Fireball spell sound"
+      }
+    }
+  },
+  "summary": {
+    "totalImages": 15,
+    "totalAudio": 14,
+    "spritesheets": 8,
+    "singleImages": 2,
+    "particles": 2,
+    "ui": 3,
+    "music": 2,
+    "soundEffects": 12
+  }
+}
+

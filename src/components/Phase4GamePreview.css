@@ -1,0 +1,88 @@
+.phase4-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  background: #000;
+  display: flex;
+  flex-direction: column;
+}
+
+.phase4-header {
+  max-width: 1400px;
+  width: 100%;
+  margin: 20px auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.phase4-back-button {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #e0e0e0;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.phase4-back-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 215, 0, 0.3);
+}
+
+.phase4-title {
+  font-size: 2.5rem;
+  margin: 0;
+  background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.phase4-game-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.phase4-game-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 0;
+  background: #000;
+}
+
+.phase4-exit-fullscreen {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #e0e0e0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  z-index: 10000;
+}
+
+.phase4-exit-fullscreen:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 215, 0, 0.3);
+}
+

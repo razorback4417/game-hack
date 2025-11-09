@@ -1,0 +1,31 @@
+{
+  "name": "gameweaver",
+  "version": "1.0.0",
+  "description": "An all-in-one, browser-only creation tool that transforms a text prompt into a playable 2D game",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "dev:server": "node server.js",
+    "dev:all": "concurrently \"npm run dev\" \"npm run dev:server\"",
+    "build": "vite build",
+    "preview": "vite preview",
+    "generate:sword": "node scripts/generate-sword-gemini.js",
+    "generate:asset": "node scripts/generate-asset-gemini.js",
+    "generate:assets": "node scripts/generate-assets.js --all"
+  },
+  "type": "module",
+  "dependencies": {
+    "@google/genai": "^1.29.0",
+    "@google/generative-ai": "^0.21.0",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "sharp": "^0.34.5"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.2.1",
+    "concurrently": "^8.2.2",
+    "vite": "^5.0.8"
+  }
+}
