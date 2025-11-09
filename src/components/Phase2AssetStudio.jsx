@@ -153,7 +153,12 @@ function Phase2AssetStudio({ prompt, assets, onAssetsUpdate, onComplete, onBack,
       setTimeout(() => setSaveStatus(null), 5000)
     } catch (error) {
       console.error('Error saving assets:', error)
-      setSaveStatus({ type: 'error', message: `Failed to save assets: ${error.message}` })
+      // Check if it's a server connection error
+      if (error.message.includes('Failed to fetch') || error.message.includes('Not Found')) {
+        setSaveStatus({ type: 'error', message: 'Asset server not running. Start it with: npm run dev:server' })
+      } else {
+        setSaveStatus({ type: 'error', message: `Failed to save assets: ${error.message}` })
+      }
       setTimeout(() => setSaveStatus(null), 5000)
     } finally {
       setIsSaving(false)

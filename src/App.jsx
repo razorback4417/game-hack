@@ -29,8 +29,8 @@ function App() {
     setLoadingProgress(0)
 
     try {
-      // Use hardcoded API key
-      const key = 'AIzaSyAdgJkSq5B28fOo8-X8P0msffTQ_GFN0wg';
+      // Get API key from environment variable or use provided one
+      const key = import.meta.env.VITE_GEMINI_API_KEY || 'AIzaSyByg3gM3e-CQJTsz7GcCSZROIwsQmQFz0A';
       setApiKey(key) // Store for later use in Phase2AssetStudio
 
       const generator = new AssetGenerationService(key)
@@ -113,18 +113,37 @@ function App() {
       // Automatically save all assets to server (except unedited backup tiles)
       try {
         const assetsToSave = generatedAssets
-          .filter(asset => !asset.fromBackup) // Don't save unedited backup tiles
+          .filter(asset => !asset.fromBackup && asset.blob) // Don't save unedited backup tiles, only assets with blobs
           .map(asset => ({
             blob: asset.blob,
             filename: asset.name
           }))
         if (assetsToSave.length > 0) {
-          await generator.saveAssetsToServer(assetsToSave)
-          console.log('✓ All generated assets saved to assets/images/')
+          // Check if server is available first
+          const serverUrl = import.meta.env.VITE_ASSET_SERVER_URL || 'http://localhost:3002'
+          try {
+            // Use Promise.race for timeout compatibility
+            const timeoutPromise = new Promise((_, reject) =>
+              setTimeout(() => reject(new Error('Timeout')), 2000)
+            )
+            const healthCheck = await Promise.race([
+              fetch(`${serverUrl}/api/health`, { method: 'GET' }),
+              timeoutPromise
+            ])
+            if (healthCheck.ok) {
+              await generator.saveAssetsToServer(assetsToSave)
+              console.log('✓ All generated assets saved to assets/images/')
+            } else {
+              console.warn('Asset server health check failed, skipping auto-save')
+            }
+          } catch (serverError) {
+            // Server not available - silently skip (this is expected if server isn't running)
+            console.warn('Asset server not available, skipping auto-save. Start with: npm run dev:server')
+          }
         }
       } catch (saveError) {
-        console.warn('Failed to auto-save assets (server may not be running):', saveError.message)
-        console.warn('Start the server with: npm run dev:server')
+        // Don't show error to user - asset generation succeeded, saving is optional
+        console.warn('Failed to auto-save assets:', saveError.message)
       }
 
       setIsLoading(false)

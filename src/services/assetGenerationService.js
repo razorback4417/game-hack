@@ -477,7 +477,7 @@ class AssetGenerationService {
       reader.onloadend = async () => {
         try {
           const base64Data = reader.result;
-          const serverUrl = import.meta.env.VITE_ASSET_SERVER_URL || 'http://localhost:3001';
+          const serverUrl = import.meta.env.VITE_ASSET_SERVER_URL || 'http://localhost:3002';
           const response = await fetch(`${serverUrl}/api/save-asset`, {
             method: 'POST',
             headers: {
@@ -525,7 +525,7 @@ class AssetGenerationService {
       })
     );
 
-    const serverUrl = import.meta.env.VITE_ASSET_SERVER_URL || 'http://localhost:3001';
+    const serverUrl = import.meta.env.VITE_ASSET_SERVER_URL || 'http://localhost:3002';
     const response = await fetch(`${serverUrl}/api/save-assets`, {
       method: 'POST',
       headers: {
